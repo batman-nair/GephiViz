@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Gephi Viz</title>
+</head>
+<style>
+    body {
+        background: black;
+    }
+</style>
+<body>
+
+<object id="gephi-svg" data="Untitled.svg" type="image/svg+xml"></object>
+
+<script>
+
+	var svg_data;
+	window.addEventListener("load", setup_data, false)
+	function setup_data() {
+		obj = document.querySelector("#gephi-svg")
+		if (obj.contentDocument) {
+			svg_data = obj.contentDocument.firstElementChild
+		}
+		else {
+			try {
+				svg_data = obj.getSVGDocument().firstElementChild
+			}
+			catch(e) {}
+		}
+		cleanup_classes(svg_data)
+		add_listeners(svg_data)
+	}
+
+	function cleanup_classes(svg_element) {
+		var paths = svg_element.querySelectorAll("path")
+		var nodes = svg_element.querySelectorAll("#nodes circle")
+		var node_labels = svg_element.querySelectorAll("#node-labels>*")
+        var all_elements = []
+        all_elements.push(...paths)
+        all_elements.push(...nodes)
+        all_elements.push(...node_labels)
+		for (var element of all_elements) {
+			element.style.transition = '0.2s ease-out'
+			var class_list = []
+			for (var class_name of element.classList) {
+				element.classList.replace(class_name, class_name.replace(/[^a-zA-Z0-9 _]/g, "_"))
+			}
+		}
+	}
+
+    function get_label_element(className) {
+        return svg_data.querySelector("#node-labels>."+className)
+    }
+    function get_node_element(className) {
+        return svg_data.querySelector("#nodes>."+className)
+    }
+
+    function get_connected_elements(node) {
+        const className = node.className.baseVal
+        const paths = svg_data.querySelectorAll("path."+className)
+        var connected_labels = [get_node_element(className), get_label_element(className)]
+        var connected_nodes = []
+        for (const path of paths) {
+            var connected_class = path.classList[0]
+            if (connected_class == className) {
+                connected_class = path.classList[1]
+            }
+            connected_nodes.push(get_node_element(connected_class))
+            connected_labels.push(get_label_element(connected_class))
+        }
+        var all_elements = []
+        all_elements.push(...paths)
+        all_elements.push(...connected_nodes)
+        all_elements.push(...connected_labels)
+        return all_elements
+    }
+
+	function highlight_func() {
+		elements = get_connected_elements(this)
+		for (var element of elements) {
+			element.style.opacity = 1
+		}
+	}
+	function dehighlight_func() {
+		elements = get_connected_elements(this)
+		for (var element of elements) {
+			element.style.opacity = 0.2
+		}
+	}
+
+	function add_listeners(svg_data) {
+		nodes = svg_data.querySelectorAll("#nodes circle")
+		var node_labels = svg_data.querySelectorAll("#node-labels>*")
+        var all_elements = []
+        all_elements.push(...nodes)
+        all_elements.push(...node_labels)
+		for (var element of all_elements) {
+			element.style.opacity = 0.2
+			element.addEventListener("mouseenter", highlight_func)
+			element.addEventListener("mouseleave", dehighlight_func)
+		}
+	}
+
+</script>
+</body>
+</html>
