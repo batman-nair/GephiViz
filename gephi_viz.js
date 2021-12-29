@@ -16,11 +16,12 @@ class GephiViz {
 
     initElements() {
         this.paths = Array.from(this.svgElement.querySelectorAll("path"))
-        this.nodes = Array.from(this.svgElement.querySelectorAll("#nodes circle"))
-        this.labels = Array.from(this.svgElement.querySelectorAll("#node-labels text"))
+        this.nodes = Array.from(this.svgElement.querySelectorAll("circle"))
+        this.labels = Array.from(this.svgElement.querySelectorAll("text"))
         this.applyElements(element => {
             // element.style.transition = 'opacity 0.1s ease-out' // This is very slow
-            this.dimElement(element)
+            // this.dimElement(element)
+            this.resetElement(element)
         })
         this.labels.map(label => {
             label.style.pointerEvents = 'none'
@@ -45,14 +46,17 @@ class GephiViz {
         element.style.opacity = 0.2
     }
     resetElement(element) {
+        element.style.opacity = 0.7
+    }
+    highlightElement(element) {
         element.style.opacity = 1
     }
 
     getNode(className) {
-        return this.svgElement.querySelector("#nodes>."+className)
+        return this.svgElement.querySelector("circle."+className)
     }
     getLabel(className) {
-        return this.svgElement.querySelector("#node-labels>."+className)
+        return this.svgElement.querySelector("text."+className)
     }
     getConnectedElements(node) {
         // console.log('get', node)
@@ -75,12 +79,18 @@ class GephiViz {
         const classObj = this
         this.nodes.map(node => {
             node.addEventListener("mouseenter", e => {
+                this.applyElements(element => {
+                    this.dimElement(element)
+                })
                 const elements = this.getConnectedElements(e.currentTarget)
-                elements.map(this.resetElement)
+                elements.map(this.highlightElement)
             })
             node.addEventListener("mouseleave", e => {
-                const elements = this.getConnectedElements(e.currentTarget)
-                elements.map(this.dimElement)
+                this.applyElements(element => {
+                    this.resetElement(element)
+                })
+                // const elements = this.getConnectedElements(e.currentTarget)
+                // elements.map(this.dimElement)
             })
         })
     }
