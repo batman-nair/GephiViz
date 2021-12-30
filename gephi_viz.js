@@ -1,6 +1,7 @@
 class GephiViz {
     constructor(objectId) {
         this.svgElement = this.getSVGObject(objectId)
+        this.viewBoxOrig = this.svgElement.viewBox.baseVal
         this.initElements()
         this.cleanupClasses()
         this.addListeners()
@@ -75,23 +76,47 @@ class GephiViz {
         return connectedElements
     }
 
+    zoomIn() {
+        var viewBox = this.svgElement.viewBox.baseVal
+        viewBox.x = viewBox.x + viewBox.width / 4;
+        viewBox.y = viewBox.y + viewBox.height / 4;
+        viewBox.width = viewBox.width / 2;
+        viewBox.height = viewBox.height / 2;
+    }
+    zoomOut() {
+        var viewBox = this.svgElement.viewBox.baseVal
+        viewBox.x = viewBox.x - viewBox.width / 2;
+        viewBox.y = viewBox.y - viewBox.height / 2;
+        viewBox.width = viewBox.width * 2;
+        viewBox.height = viewBox.height * 2;
+    }
+
     addListeners() {
         const classObj = this
         this.nodes.map(node => {
-            node.addEventListener("mouseenter", e => {
+            node.addEventListener("mouseenter", event => {
                 this.applyElements(element => {
                     this.dimElement(element)
                 })
-                const elements = this.getConnectedElements(e.currentTarget)
+                const elements = this.getConnectedElements(event.currentTarget)
                 elements.map(this.highlightElement)
             })
-            node.addEventListener("mouseleave", e => {
+            node.addEventListener("mouseleave", event => {
                 this.applyElements(element => {
                     this.resetElement(element)
                 })
-                // const elements = this.getConnectedElements(e.currentTarget)
+                // const elements = this.getConnectedElements(event.currentTarget)
                 // elements.map(this.dimElement)
             })
+        })
+        this.svgElement.addEventListener("wheel", event => {
+            const delta = Math.sign(event.deltaY)
+            if (delta > 0) {
+                this.zoomOut()
+            }
+            else {
+                this.zoomIn()
+            }
         })
     }
 
