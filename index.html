@@ -6,16 +6,20 @@
 <style>
     body {
         background: black;
+		overflow: hidden;
     }
+	object {
+		width: 100%;
+		height: 100vh;
+	}
 </style>
 <body>
 
-<object id="gephi-svg" data="Untitled.svg" type="image/svg+xml"></object>
+<object id="gephi-svg" data="rctns_mono2.svg" type="image/svg+xml"></object>
 
 <script src="gephi_viz.js"></script>
 <script>
 
-	var gephiObj;
 	window.addEventListener("load", e => {
 		gephiObj = new GephiViz("#gephi-svg")
 	}, false)
