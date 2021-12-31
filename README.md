@@ -13,3 +13,7 @@ You can use the index.html as reference, basically these would be steps
 1. Add object element with the svg as data
 2. Include the gephi_viz.js script
 3. Create the GephiViz object with object id
+
+## Data used for the graph
+
+This data was collected using the [TimeTrak bot](https://github.com/batman-nair/TimeTrak) running in the background for over an year.
