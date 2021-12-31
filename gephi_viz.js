@@ -144,18 +144,17 @@ class GephiViz {
         this.isClicked = false
         let x = 0
         let y = 0
-        // let lastMove = Date.now()
-        this.svgElement.addEventListener("mousedown", event => {
+        let pressFunc = event => {
             x = event.offsetX
             y = event.offsetY
             this.isClicked = true
-        })
-        this.svgElement.addEventListener("mouseup", event => {
+        }
+        let releaseFunc = event => {
             x = event.offsetX
             y = event.offsetY
             this.isClicked = false
-        })
-        this.svgElement.addEventListener("mousemove", event => {
+        }
+        let moveFunc = event => {
             if (this.isClicked) {
                 let viewBox = this.svgElement.viewBox.baseVal
                 let newX = viewBox.x + (x - event.offsetX)
@@ -165,7 +164,13 @@ class GephiViz {
                 x = event.offsetX
                 y = event.offsetY
             }
-        })
+        }
+        this.svgElement.addEventListener("mousedown", pressFunc)
+        this.svgElement.addEventListener("mouseup", releaseFunc)
+        this.svgElement.addEventListener("mousemove", moveFunc)
+        this.svgElement.addEventListener("touchstart", pressFunc)
+        this.svgElement.addEventListener("touchmove", moveFunc)
+        this.svgElement.addEventListener("touchend", releaseFunc)
     }
 
 }
