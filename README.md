@@ -2,6 +2,8 @@
 
 Make interactive visualizations of [Gephi](https://gephi.org/) SVGs
 
+Click drag to navigate the map. Hover on nodes to highlight connected nodes.
+
 ## How to use
 
 You can use the index.html as reference, basically these would be steps
