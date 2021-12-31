@@ -1,4 +1,4 @@
-# GephiViz.js
+# GephiViz
 
 Make interactive visualizations of [Gephi](https://gephi.org/) SVGs
 
