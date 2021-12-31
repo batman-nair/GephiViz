@@ -13,6 +13,8 @@ class GephiViz {
         this.initElements()
         this.cleanupClasses()
         this.addListeners()
+        this.zoomIn()
+        this.zoomIn()
     }
 
     getSVGObject(objectId) {
