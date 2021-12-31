@@ -144,33 +144,45 @@ class GephiViz {
         this.isClicked = false
         let x = 0
         let y = 0
-        let pressFunc = event => {
-            x = event.offsetX
-            y = event.offsetY
+        let pressFunc = (eventX, eventY) => {
+            x = eventX
+            y = eventY
             this.isClicked = true
         }
-        let releaseFunc = event => {
-            x = event.offsetX
-            y = event.offsetY
+        let releaseFunc = (eventX, eventY) => {
+            x = eventX
+            y = eventY
             this.isClicked = false
         }
-        let moveFunc = event => {
+        let moveFunc = (eventX, eventY) => {
             if (this.isClicked) {
                 let viewBox = this.svgElement.viewBox.baseVal
-                let newX = viewBox.x + (x - event.offsetX)
-                let newY = viewBox.y + (y - event.offsetY)
+                let newX = viewBox.x + (x - eventX)
+                let newY = viewBox.y + (y - eventY)
                 viewBox.x = Math.max(this.minViewX, Math.min(this.maxViewX-viewBox.width, newX))
                 viewBox.y = Math.max(this.minViewY, Math.min(this.maxViewY-viewBox.height, newY))
-                x = event.offsetX
-                y = event.offsetY
+                x = eventX
+                y = eventY
             }
         }
-        this.svgElement.addEventListener("mousedown", pressFunc)
-        this.svgElement.addEventListener("mouseup", releaseFunc)
-        this.svgElement.addEventListener("mousemove", moveFunc)
-        this.svgElement.addEventListener("touchstart", pressFunc)
-        this.svgElement.addEventListener("touchmove", moveFunc)
-        this.svgElement.addEventListener("touchend", releaseFunc)
+        this.svgElement.addEventListener("mousedown", event => {
+            pressFunc(event.offsetX, event.offsetY)
+        })
+        this.svgElement.addEventListener("mouseup", event => {
+            releaseFunc(event.offsetX, event.offsetY)
+        })
+        this.svgElement.addEventListener("mousemove", event => {
+            moveFunc(event.offsetX, event.offsetY)
+        })
+        this.svgElement.addEventListener("touchstart", event => {
+            pressFunc(event.touches[0].clientX, event.touches[0].clientY)
+        })
+        this.svgElement.addEventListener("touchmove", event => {
+            moveFunc(event.touches[0].clientX, event.touches[0].clientY)
+        })
+        this.svgElement.addEventListener("touchend", event => {
+            releaseFunc(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
+        })
     }
 
 }
