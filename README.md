@@ -2,7 +2,7 @@
 
 Make interactive visualizations of [Gephi](https://gephi.org/) SVGs
 
-Click drag to navigate the map. Hover on nodes to highlight connected nodes.
+Click drag to navigate the map. Scroll or pinch to zoom. Hover on nodes to highlight connected nodes. [Try it out](https://batmannair.com/GephiViz/)
 
 ![GephiViz Visualization](visualization.gif)
 
